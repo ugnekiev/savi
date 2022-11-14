@@ -1,6 +1,5 @@
 import './App.scss';
 import { BrowserRouter, Route, Routes} from "react-router-dom";
-// import { useState} from "react";
 import Main from './components/savivaldybes/Main';
 import MainK from './components/komentarai/Main';
 import MainP from './components/paslaugos/Main';

@@ -184,18 +184,27 @@ app.get("/server/paslaugos", (req, res) => {
     });
 });
 
+
+//HOME LIST
 app.get("/server/komentarai", (req, res) => {
     const sql = `
-    SELECT *
-    FROM komentarai
+    SELECT k.*, s.name AS savName, s.image, s.id AS sid, p.title
+    FROM komentarai AS k
+    INNER JOIN savivaldybes AS s 
+    ON k.savivaldybiu_id = s.id
+    INNER JOIN paslaugos AS p 
+    ON k.paslaugu_id = p.id
+    ORDER BY s.name
     `;
     con.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);
     });
 });
-//HOME LIST
-app.get("/home/komentarai", (req, res) => {
+
+
+// KOMENTARU admin LIST
+app.get("/admin/komentarai", (req, res) => {
     const sql = `
     SELECT k.*, s.name AS savName, s.id AS sid, p.title
     FROM komentarai AS k
@@ -210,19 +219,18 @@ app.get("/home/komentarai", (req, res) => {
         res.send(result);
     });
 });
+// KOMENTARU admin LIST
+app.post("/admin/komentarai", (req, res) => {
+    const sql = `
+    INSERT INTO komentarai (komentaras, savivaldybiu_id, paslaugu_id)
+    VALUES (?, ?, ?)
+    `;
+    con.query(sql, [req.body.comment, req.body.savivaldybiu_id, req.body.paslaugu_id], (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
-//EDIT
-// app.put("/server/savivaldybes/:id", (req, res) => {
-//     const sql = `
-//     UPDATE savivaldybes
-//     SET name = ?, image = ?
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.body.title, req.body.image, req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
 
 app.put("/server/savivaldybes/:id", (req, res) => {
     let sql;
@@ -267,22 +275,6 @@ app.put("/server/paslaugos/:id", (req, res) => {
     });
 });
 
-// //jungiame komentaru su savivaldybiu ir paslaugu lentelemis
-app.get("/server/komentarai", (req, res) => {
-    const sql = `
-    SELECT k.*, name, surname, title, s.id AS sid
-    FROM komentarai AS k
-    INNER JOIN savivaldybes AS s
-    ON k.savivaldybiu_id = s.id
-    INNER JOIN paslaugos AS p
-    ON k.paslaugu_id = p.id
-    `;
-    con.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send(result);
-    });
-});
-
 //DELETE
 app.delete("/server/komentarai/:id", (req, res) => {
     const sql = `
@@ -308,124 +300,3 @@ app.put("/server/komentarai/:id", (req, res) => {
 });
 
 
-
-// app.post("/server/bills", (req, res) => {
-//     const sql = `
-//     INSERT INTO bills (consumer_id, invoice_nr, kwh, total)
-//     VALUES (?, ?, ?, ?)
-//     `;
-//     con.query(sql, [req.body.consumerId, req.body.invoice, req.body.kwh, req.body.total], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-// //READ ALL
-// app.get("/server/suppliers", (req, res) => {
-//     const sql = `
-//     SELECT *
-//     FROM electricity_suppliers
-//     `;
-//     con.query(sql, (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-
-
-// //jungiame suplieriu ir consumeriu db lenteles
-// app.get("/server/all", (req, res) => {
-//     const sql = `
-//     SELECT title, c.*, s.id AS sid, price
-//     FROM electricity_suppliers AS s
-//     INNER JOIN electricity_consumers AS c
-//     ON c.supplier_id = s.id
-//     `;
-// //s.id AS sid - nuskaitome is supplier lenteles id ir pervadiname i sid
-//     con.query(sql, (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-// //jungiame bills ir consumeriu lenteles; kiekvienas bills turi consumeri
-// app.get("/server/bills", (req, res) => {
-//     const sql = `
-//     SELECT b.*, name, surname, title, s.id AS sid
-//     FROM bills AS b
-//     INNER JOIN electricity_consumers AS c
-//     ON b.consumer_id = c.id
-//     INNER JOIN electricity_suppliers AS s
-//     ON c.supplier_id = s.id
-//     `;
-//     con.query(sql, (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// }); 
-//     const sql = `
-//     SELECT d.*, name, surname, idea.id 
-//     FROM donors AS d
-//     INNER JOIN ideas AS i
-//     ON d.idea_id 
-
-
-
-// //DELETE
-// app.delete("/server/suppliers/:id", (req, res) => {
-//     const sql = `
-//     DELETE from electricity_suppliers
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-// app.delete("/server/consumers/:id", (req, res) => {
-//     const sql = `
-//     DELETE from electricity_consumers
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-// app.delete("/server/bills/:id", (req, res) => {
-//     const sql = `
-//     DELETE from bills
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-// //EDIT
-// app.put("/server/suppliers/:id", (req, res) => {
-//     const sql = `
-//     UPDATE electricity_suppliers
-//     SET title = ?, price = ?
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.body.title, req.body.price, req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });
-
-// app.put("/server/consumers/:id", (req, res) => {
-//     const sql = `
-//     UPDATE electricity_consumers
-//     SET name = ?, surname = ?, counter_number = ?, supplier_id = ?
-//     WHERE id = ?
-//     `;
-//     con.query(sql, [req.body.name, req.body.surname, req.body.countnumber, req.body.supplier, req.params.id], (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//     });
-// });

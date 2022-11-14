@@ -20,16 +20,16 @@ function Main() {
             comment,
             savivaldybiu_id,
             paslaugu_id,
+
         });
         setComment('');
         setPaslaugu_id(0);
         setSavivaldybiu_id(0);
     }
 
-
     //READ for list
     useEffect(() => {
-        axios.get('http://localhost:3003/home/komentarai')
+        axios.get('http://localhost:3003/server/komentarai')
             .then(res => {
                 console.log(res.data);
                 setComments(res.data);
@@ -50,7 +50,6 @@ function Main() {
             })
     }, []);
 
-
     // CREATE
     useEffect(() => {
         if (null === createData) {
@@ -63,6 +62,7 @@ function Main() {
             );
     }, [createData])
 
+   
 
     return (
         <Home.Provider value={{
@@ -71,8 +71,8 @@ function Main() {
             lastUpdate
         }}>
             <div className="container">
-                <div className="row">
-                    <div className="col-12">
+                <div className="row justify-content-center">
+                    <div className="col-10">
                         <div className="card m-4">
                             <h5 className="card-header">Sukurti komentarą</h5>
                             <div className="card-body">

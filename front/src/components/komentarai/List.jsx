@@ -5,14 +5,14 @@ import Line from "./Line";
 function List() {
 
   const { comments } = useContext(Komentaras);
-console.log(comments)
+console.log('dsg', comments)
   return (
     <div className="card m-4">
       <h5 className="card-header">Komentarai</h5>
       <div className="card-body"></div>
       <ul className="list-group">
         {
-          comments?.map(s => s.state === 0 ? <Line key={s.id} comment={s}/> : null
+          comments?.map(s =>  <Line key={s.id} comment={s}/> 
           )
         }
       </ul>

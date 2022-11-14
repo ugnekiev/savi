@@ -6,7 +6,7 @@ function List() {
 
   const { comments } = useContext(Home);
 
-console.log(comments)
+  console.log(comments)
   return (
     <div className="card m-4">
       <h5 className="card-header">Komentarų sąrašas</h5>

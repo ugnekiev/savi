@@ -1,9 +1,8 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import Komentaras from '../../contexts/Komentaras';
 
 function Edit() {
 
-  // const [comment, setComment] = useState ('');
 
   const { modalData, setModalData, setEditData, setDeleteData } = useContext(Komentaras);
 
@@ -28,8 +27,6 @@ function Edit() {
     return null;
   }
 
-
-
   return (
     <div className="modal">
       <div className="modal-dialog modal-dialog-centered">
@@ -46,7 +43,8 @@ function Edit() {
             </div>
             <div className="home__buttons">
             <button onClick={del} type="button" className="btn btn-secondary">Ištrinti</button>
-            <button onClick={save} type="button" className="btn btn-primary">Patvirtinti</button>
+             {/* cia neaktyvus PATVIRTINTI mygtukas */}
+            <button onClick={save} type="button" className="btn btn-primary" disabled={modalData.state}>Patvirtinti</button>
             </div>
           </div>
         </div>
